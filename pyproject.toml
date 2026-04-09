@@ -1,0 +1,35 @@
+[project]
+name = "air-quality-dwh"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "loguru>=0.7.3",
+    "pandas>=3.0.2",
+    "pyodbc>=5.3.0",
+    "requests>=2.33.1",
+    "sqlalchemy>=2.0.49",
+]
+
+[dependency-groups]
+dev = [
+    "dotenv>=0.9.9",
+    "pytest>=9.0.3",
+    "ruff>=0.15.9",
+]
+
+[tool.ruff]
+# Wybieramy zestawy reguł (E - błędy, F - Pyflakes, I - sortowanie importów)
+select = ["E", "F", "I"]
+ignore = []
+
+# Ustawienie długości linii
+line-length = 100
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+[tool.ruff.isort]
+known-first-party = ["src"]
