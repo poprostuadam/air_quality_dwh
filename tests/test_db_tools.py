@@ -1,6 +1,8 @@
-from sqlalchemy.engine import Engine
 from sqlalchemy import text
+from sqlalchemy.engine import Engine
+
 from src.db_tools import get_db_engine
+
 
 def test_get_db_engine_returns_valid_object():
 

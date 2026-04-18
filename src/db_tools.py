@@ -1,13 +1,9 @@
+from loguru import logger
 from sqlalchemy import create_engine
 from sqlalchemy.engine import Engine
-from loguru import logger
 
-DB_USER="sa"
-DB_PASSWORD="Password1234"
-DB_HOST="localhost"
-DB_PORT="1433"
-DB_NAME="master"
-DB_DRIVER = "ODBC+Driver+18+for+SQL+Server"
+from src.config import DB_DRIVER, DB_HOST, DB_NAME, DB_PASSWORD, DB_PORT, DB_USER
+
 
 def get_db_engine() -> Engine:
     """
