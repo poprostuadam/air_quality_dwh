@@ -72,6 +72,10 @@ def transform_measurements(measurements_data: list) -> pd.DataFrame:
         df = df.dropna(subset=['value'])
         
     logger.success(f"Measurements DataFrame ready. Shape: {df.shape}")
+    # Generowanie klucza daty pod wymiar Dim_Date (format YYYYMMDD jako INT)
+    df['date_key'] = df['measured_at'].dt.strftime('%Y%m%d').astype(int)
+    
+    logger.success(f"Measurements DataFrame ready. Shape: {df.shape}")
     return df
 
 if __name__ == "__main__":

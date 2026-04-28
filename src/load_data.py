@@ -20,6 +20,7 @@ def load_dimension_table(df: pd.DataFrame, engine):
         logger.success("Sukces: Załadowano Dim_Station.")
     except Exception as e:
         logger.error(f"Błąd ładowania Dim_Station: {e}")
+        raise
 
 def load_fact_table(df: pd.DataFrame, engine):
     """Ładuje pomiary do tabeli Fact_AirQuality."""
@@ -33,6 +34,7 @@ def load_fact_table(df: pd.DataFrame, engine):
         logger.success("Sukces: Załadowano Fact_AirQuality.")
     except Exception as e:
         logger.error(f"Błąd ładowania Fact_AirQuality: {e}")
+        raise
 
 if __name__ == "__main__":
     logger.info("Testowanie połączenia z bazą danych przez db_tool...")
@@ -42,3 +44,4 @@ if __name__ == "__main__":
             logger.success("Połączenie nawiązane pomyślnie! db_tool i config.py działają idealnie.")
     except Exception as e:
         logger.error(f"Błąd połączenia. Sprawdź kontener Docker i plik .env. Szczegóły: {e}")
+        raise

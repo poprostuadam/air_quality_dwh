@@ -4,8 +4,10 @@ Implements Pagination and strict parameter types according to official documenta
 """
 import time
 from datetime import datetime, timedelta, timezone
-from openaq import OpenAQ
+
 from loguru import logger
+from openaq import OpenAQ
+
 from src.config import OPENAQ_API_KEY
 
 # Initialize single client instance
