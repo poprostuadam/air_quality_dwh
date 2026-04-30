@@ -1,6 +1,9 @@
 """
-Moduł odpowiedzialny za ładowanie (Load) danych do bazy MS SQL Server.
-Wykorzystuje bezpieczną konfigurację z config.py oraz narzędzie db_tool.
+Module responsible for the 'Load' phase of the ETL process.
+
+It safely inserts transformed Pandas DataFrames into the MS SQL Server 
+Data Warehouse tables (Facts and Dimensions) using SQLAlchemy. It utilizes 
+the secure configuration from config.py and the database engine from db_tools.
 """
 import pandas as pd
 from loguru import logger
@@ -9,7 +12,16 @@ from src.db_tools import get_db_engine
 
 
 def load_dimension_table(df: pd.DataFrame, engine):
-    """Ładuje dane stacji do tabeli Dim_Station."""
+    """
+    Loads station data into the Dim_Station dimension table.
+
+    Args:
+        df (pd.DataFrame): The transformed DataFrame containing station data.
+        engine: The SQLAlchemy engine instance connected to the database.
+
+    Raises:
+        Exception: If the SQL insert operation fails.
+    """
     if df.empty:
         logger.warning("Brak danych stacji do załadowania.")
         return
@@ -23,7 +35,16 @@ def load_dimension_table(df: pd.DataFrame, engine):
         raise
 
 def load_fact_table(df: pd.DataFrame, engine):
-    """Ładuje pomiary do tabeli Fact_AirQuality."""
+    """
+    Loads air quality measurements into the Fact_AirQuality table.
+
+    Args:
+        df (pd.DataFrame): The transformed DataFrame containing measurement facts.
+        engine: The SQLAlchemy engine instance connected to the database.
+
+    Raises:
+        Exception: If the SQL insert operation fails.
+    """
     if df.empty:
         logger.warning("Brak danych pomiarowych do załadowania.")
         return

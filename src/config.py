@@ -1,3 +1,12 @@
+"""
+Configuration module for the Air Quality Data Warehouse (DWH).
+
+This module is responsible for loading environment variables from a local .env file
+and exposing them as Python constants. It centralizes the configuration for both
+the database connection and the OpenAQ API, ensuring that sensitive credentials 
+(like passwords and API keys) are safely managed and not hardcoded in the scripts.
+"""
+
 import os
 
 from dotenv import load_dotenv

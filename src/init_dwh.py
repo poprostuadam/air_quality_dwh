@@ -1,13 +1,15 @@
 """
-Inicjalizacja schematu Hurtowni Danych (Star Schema: 1 Fakt, 3 Wymiary).
-Skrypt automatycznie czyści stare tabele i tworzy nową strukturę.
+Initialization script for the Data Warehouse schema.
+
+This module sets up a Star Schema consisting of 1 Fact table and 3 Dimension tables.
+It automatically drops existing tables to prevent conflicts, creates the new structure,
+and populates static dimensions (like Date and Pollutant) with initial data.
 """
 from loguru import logger
 from sqlalchemy import text
 
 from src.db_tools import get_db_engine
 
-# 1. Krok czyszczenia - KOLEJNOŚĆ JEST KRYTYCZNA (najpierw Fakty, potem Wymiary)
 DROP_TABLES_SQL = """
 IF EXISTS (SELECT * FROM sysobjects WHERE name='Fact_AirQuality' AND xtype='U')
     DROP TABLE Fact_AirQuality;
@@ -22,7 +24,6 @@ IF EXISTS (SELECT * FROM sysobjects WHERE name='Dim_Date' AND xtype='U')
     DROP TABLE Dim_Date;
 """
 
-# 2. Krok tworzenia nowej struktury (Idealnie pod nasz Pandas ETL)
 CREATE_TABLES_SQL = """
 -- Wymiar 1: Stacje
 CREATE TABLE Dim_Station (
@@ -39,7 +40,7 @@ CREATE TABLE Dim_Pollutant (
     parameter_name NVARCHAR(50)
 );
 
--- Wymiar 3: Czas (Wymagany przez prowadzącego)
+-- Wymiar 3: Czas 
 CREATE TABLE Dim_Date (
     date_key INT PRIMARY KEY,
     full_date DATE,
@@ -61,14 +62,13 @@ CREATE TABLE Fact_AirQuality (
 );
 """
 
-# 3. Krok zasilania wymiarów statycznych
-# Zmieniamy zakres generowania dat na ostatnie 400 dni
+
 POPULATE_DIMENSIONS_SQL = """
 SET NOCOUNT ON;
 -- Zasilenie zanieczyszczeń
 INSERT INTO Dim_Pollutant (parameter_id, parameter_name) VALUES (1, 'PM10'), (2, 'PM2.5');
 
--- Wygenerowanie pancernego kalendarza (od 2024 do 2035 roku)
+-- Wygenerowanie kalendarza (od 2020 do 2035 roku)
 DECLARE @StartDate DATE = '2020-01-01';
 DECLARE @EndDate DATE = '2035-12-31';
 
@@ -87,11 +87,20 @@ END;
 """
 
 def initialize_dwh():
+    """
+    Initializes the Data Warehouse schema by executing drop, create, and insert scripts.
+
+    Uses SQLAlchemy's engine.begin() context manager to ensure transaction safety 
+    (it automatically commits on success or rolls back entirely on failure).
+
+    Raises:
+        Exception: If any SQL execution fails during the initialization process.
+    """
     logger.info("Rozpoczynam resetowanie i inicjalizację schematu Hurtowni Danych...")
     engine = get_db_engine()
     
     try:
-        # with engine.begin() automatycznie robi COMMIT na koniec lub ROLLBACK w razie błędu
+        # Context manager handles transaction COMMIT/ROLLBACK automatically
         with engine.begin() as conn:
             logger.info("1/3 Usuwanie starych tabel (jeśli istnieją)...")
             conn.execute(text(DROP_TABLES_SQL))

@@ -1,6 +1,9 @@
 """
-Jednorazowy skrypt do pobrania danych historycznych (Initial Load).
-Uruchamiamy go tylko raz, aby napełnić pustą bazę MS SQL.
+One-time execution script for the Initial Load of historical data.
+
+This module should be run only once to populate the empty MS SQL Data Warehouse 
+with historical records (e.g., the last 365 days). It bypasses the daily Airflow 
+scheduler to safely handle large initial data volumes without causing timeouts.
 """
 from loguru import logger
 
@@ -11,6 +14,19 @@ from src.load_data import load_dimension_table, load_fact_table
 
 
 def run_historical_load():
+    """
+    Executes the initial historical Extract, Transform, Load (ETL) pipeline.
+    
+    Steps:
+    1. EXTRACT: Fetches up to 50 locations within Poland and retrieves 
+       their measurement history for the last 365 days.
+    2. TRANSFORM: Converts the raw JSON data into Pandas DataFrames formatted 
+       for the Star Schema (Dim_Station and Fact_AirQuality).
+    3. LOAD: Inserts the transformed DataFrames into the database using SQLAlchemy.
+    
+    Returns:
+        None
+    """
     logger.info("Rozpoczynam historyczne zasilanie bazy (ostatnie 365 dni)...")
     engine = get_db_engine()
     
@@ -19,7 +35,7 @@ def run_historical_load():
     stations = fetch_locations(limit=50, bbox=poland_bbox)
     active_stations = [s for s in stations if s.get('datetime_last')]
     
-    # 2. POBIERANIE WSTECZ: Ustawiamy days_history na 365 dni!
+    # 2. POBIERANIE WSTECZ: Ustawiamy days_history na 365 dni
     raw_meas = fetch_measurements(locations_data=active_stations, days_history=365)
     
     # 3. Transform & Load

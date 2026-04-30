@@ -1,3 +1,11 @@
+"""
+Database connectivity tools for the Air Quality Data Warehouse.
+
+This module provides functions to establish a robust connection to the 
+MS SQL Server database using SQLAlchemy and pyodbc. It acts as the bridge 
+between the Python ETL scripts (Pandas) and the actual database.
+"""
+
 from loguru import logger
 from sqlalchemy import create_engine
 from sqlalchemy.engine import Engine
@@ -7,14 +15,17 @@ from src.config import DB_DRIVER, DB_HOST, DB_NAME, DB_PASSWORD, DB_PORT, DB_USE
 
 def get_db_engine() -> Engine:
     """
-    Creates and returns a database engine for connecting to SQL server. 
-    Enabled fast_executemany options speeds up the insertion of large dataframes.
+    Creates and returns a SQLAlchemy database engine for connecting to the SQL Server. 
+    
+    This function utilizes the 'fast_executemany' option, which significantly 
+    speeds up the bulk insertion of large Pandas DataFrames during the Load phase.
 
     Returns:
-        Engine: SQLAlchemy engine instance ready to connect to the SQL Server database.
+        Engine: A SQLAlchemy engine instance ready to execute SQL queries.
 
     Raises:
-        Exception: If SQLAlchemy engine fails to initialize
+        Exception: If the SQLAlchemy engine fails to initialize due to connection 
+                   issues or incorrect credentials.
     """
     connection_string = (
         f"mssql+pyodbc://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
