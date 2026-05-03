@@ -1,4 +1,4 @@
-## Hurtownie danych - projekt zaliczeniowy - laboratoria
+cle## Hurtownie danych - projekt zaliczeniowy - laboratoria
 ### Cel projektu
 Praktyczne zapozanie z:
 - Architekturą hurtowni danych
