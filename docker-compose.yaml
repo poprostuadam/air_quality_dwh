@@ -31,7 +31,7 @@ services:
     container_name: sqlserver_dwh
     environment:
       ACCEPT_EULA: "Y"
-      MSSQL_SA_PASSWORD: "${DB_PASSWORD:?Set DB_PASSWORD in .env}" 
+      MSSQL_SA_PASSWORD: "${DB_PASSWORD:?Set DB_PASSWORD in .env}"
     ports:
       - "1433:1433"
     healthcheck:
