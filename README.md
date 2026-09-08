@@ -73,9 +73,9 @@ cd air_quality_dwh
 cp .env.example .env
 ```
 
-Add your OpenAQ API key to `.env`. On Linux, set `AIRFLOW_UID` to the result of `id -u`.
+Add your OpenAQ API key and choose a strong SQL Server `DB_PASSWORD` in `.env`. SQL Server requires a password that satisfies its complexity rules. On Linux, set `AIRFLOW_UID` to the result of `id -u`.
 
-The credentials included in `docker-compose.yaml` are development defaults. Change them before using the project outside an isolated local environment.
+The Airflow login in `docker-compose.yaml` uses local development defaults. Change it before using the project outside an isolated local environment.
 
 ### 2. Start the infrastructure
 
